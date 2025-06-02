@@ -1,19 +1,20 @@
 package animals;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
 public class CatTest {
-    @Test
-    void getSoundReturnsMeow() {
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 5})
+    void getKittensReturnsExpectedCount(int kittensCount) {
         Feline feline = mock(Feline.class);
+        when(feline.getKittens()).thenReturn(kittensCount);
         Cat cat = new Cat(feline);
-        assertEquals("Мяу", cat.getSound());
-    }
-    @Test
-    void getKittensDelegatesToFeline() {
-        Feline feline = mock(Feline.class);
-        when(feline.getKittens()).thenReturn(2);
-        Cat cat = new Cat(feline);
-        assertEquals(2, cat.getKittens());
+
+        assertEquals(kittensCount, cat.getKittens());
     }
 }

@@ -1,20 +1,23 @@
 package animals;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 public class LionTest {
-    @Test
-    void lionHasManeIfMale() throws Exception {
-        Lion lion = new Lion("Male", new Feline());
-        assertTrue(lion.doesHaveMane());
+
+    @ParameterizedTest
+    @CsvSource({
+        "Male, true",
+        "Female, false"
+    })
+    void lionManeDependsOnSex(String sex, boolean expectedHasMane) throws Exception {
+        Lion lion = new Lion(sex, new Feline());
+        assertEquals(expectedHasMane, lion.doesHaveMane());
     }
-    @Test
-    void lionHasNoManeIfFemale() throws Exception {
-        Lion lion = new Lion("Female", new Feline());
-        assertFalse(lion.doesHaveMane());
-    }
+
     @Test
     void lionThrowsOnInvalidSex() {
         Exception exception = assertThrows(Exception.class, () -> {
@@ -22,6 +25,7 @@ public class LionTest {
         });
         assertEquals("Unknown sex", exception.getMessage());
     }
+
     @Test
     void lionDelegatesToFeline() throws Exception {
         Feline feline = mock(Feline.class);

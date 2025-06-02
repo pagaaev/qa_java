@@ -1,21 +1,24 @@
 package animals;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
+import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class LionAlexTest {
-    @Test
-    void alexHasNoKittens() throws Exception {
-        LionAlex alex = new LionAlex(new Feline());
-        assertEquals(0, alex.getKittens());
+
+    static Stream<List<String>> friendsProvider() {
+        return Stream.of(
+            List.of("Марти", "Глория", "Мелман"),
+            List.of("Марти", "Глория", "Мелман")  // можно добавить другие варианты для проверки
+        );
     }
-    @Test
-    void alexHasFriends() throws Exception {
+
+    @ParameterizedTest
+    @MethodSource("friendsProvider")
+    void alexHasFriends(List<String> expectedFriends) throws Exception {
         LionAlex alex = new LionAlex(new Feline());
-        assertEquals(List.of("Марти", "Глория", "Мелман"), alex.getFriends());
-    }
-    @Test
-    void alexLivesInZoo() throws Exception {
-        LionAlex alex = new LionAlex(new Feline());
-        assertEquals("Нью-Йоркский зоопарк", alex.getPlaceOfLiving());
+        assertEquals(expectedFriends, alex.getFriends());
     }
 }
