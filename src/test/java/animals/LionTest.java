@@ -31,6 +31,6 @@ public class LionTest {
         Feline feline = mock(Feline.class);
         when(feline.getKittens()).thenReturn(1);
         Lion lion = new Lion("Male", feline);
-        assertEquals(3, lion.getKittens());
+        assertEquals(1, lion.getKittens());
     }
 }
