@@ -1,29 +1,21 @@
 package animals;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CatTest {
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 5})
-    void getKittensReturnsExpectedCount(int ignoredCount) {
-        // Создаем реальный объект Feline
-        Feline realFeline = new Feline();
+    @Test
+    void getKittensReturnsOneFromMock() {
+        Feline felineMock = mock(Feline.class);
+        // Исправлено: мок теперь всегда возвращает 1, как реальный Feline
+        when(felineMock.getKittens()).thenReturn(1);
 
-        // Оборачиваем его в spy
-        Feline spyFeline = spy(realFeline);
+        Cat cat = new Cat(felineMock);
 
-        // Переопределяем метод getKittens() чтобы всегда возвращал 1
-        when(spyFeline.getKittens()).thenReturn(1);
-
-        Cat cat = new Cat(spyFeline);
-
-        // Проверяем, что cat.getKittens() всегда 1
         assertEquals(1, cat.getKittens());
+        // Проверяем, что мок был вызван ровно один раз
+        verify(felineMock, times(1)).getKittens();
     }
 }
-

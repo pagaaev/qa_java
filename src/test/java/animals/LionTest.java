@@ -1,36 +1,40 @@
 package animals;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LionTest {
 
-    @ParameterizedTest
-    @CsvSource({
-        "Male, true",
-        "Female, false"
-    })
-    void lionManeDependsOnSex(String sex, boolean expectedHasMane) throws Exception {
-        Lion lion = new Lion(sex, new Feline());
-        assertEquals(expectedHasMane, lion.doesHaveMane());
-    }
-
     @Test
-    void lionThrowsOnInvalidSex() {
-        Exception exception = assertThrows(Exception.class, () -> {
-            new Lion("Other", new Feline());
-        });
-        assertEquals("Unknown sex", exception.getMessage());
-    }
+    void getKittensReturnsOneFromMock() throws Exception {
+        Feline felineMock = mock(Feline.class);
+        when(felineMock.getKittens()).thenReturn(1);
 
-    @Test
-    void lionDelegatesToFeline() throws Exception {
-        Feline feline = mock(Feline.class);
-        when(feline.getKittens()).thenReturn(1);
-        Lion lion = new Lion("Male", feline);
+        Lion lion = new Lion("Male", felineMock);
+
         assertEquals(1, lion.getKittens());
+        verify(felineMock, times(1)).getKittens();
+    }
+
+    @Test
+    void lionWithFemaleSexHasNoMane() throws Exception {
+        Feline felineMock = mock(Feline.class);
+        Lion lion = new Lion("Female", felineMock);
+        assertFalse(lion.doesHaveMane());
+    }
+
+    @Test
+    void lionWithMaleSexHasMane() throws Exception {
+        Feline felineMock = mock(Feline.class);
+        Lion lion = new Lion("Male", felineMock);
+        assertTrue(lion.doesHaveMane());
+    }
+
+    @Test
+    void lionWithInvalidSexThrowsException() {
+        Feline felineMock = mock(Feline.class);
+        Exception exception = assertThrows(Exception.class, () -> new Lion("Самец", felineMock));
+        assertEquals("Unknown sex", exception.getMessage());
     }
 }
